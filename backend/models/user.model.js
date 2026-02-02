@@ -14,17 +14,25 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     }
-    ,name:{
+    ,
+    name:{
         type: String,
         required: true,
         trim: true
     },
+    refreshTokens: [String],
     isVerified: {
         type: Boolean,
         default: false
     },
     otp: String,
     otpExpiry: Date,
+
+    passwordResetOtp: String,
+    passwordResetOtpExpiry: Date,
+
+    passwordResetToken: String,
+    passwordResetTokenExpiry: Date,
     
 },{timestamps: true});
 
