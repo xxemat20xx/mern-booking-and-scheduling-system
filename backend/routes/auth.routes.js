@@ -6,8 +6,10 @@ import {
  login,
  forgotPassword,
  resetPassword,
- logout
+ logout,
+ checkAuth
 } from '../controller/auth.controller.js'
+import { verifyToken } from '../middleware/verifyToken.js';
 
 const router = express.Router();
 
@@ -18,5 +20,8 @@ router.post('/login', login);
 router.post('/forgot', forgotPassword);
 router.post('/reset/:token', resetPassword);
 router.post('/logout', logout);
+
+// protected
+router.get('/check-auth', verifyToken, checkAuth);
 
 export default router;

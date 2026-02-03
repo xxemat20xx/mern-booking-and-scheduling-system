@@ -3,6 +3,7 @@ import crypto from 'crypto'
 
 import { sendEmail } from '../utils/email.js'
 import { cookieOptions } from '../utils/cookie.js';
+import { hashToken } from '../utils/hashToken.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 
 
@@ -88,10 +89,10 @@ export const login = async(req, res) => {
 
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
-
+        const hashedRefreshToken = hashToken(refreshToken);
         //Single session 
         //refreshTokenS with (S) -> from Schema/DB
-        user.refreshTokens = [refreshToken];
+        user.refreshTokens = [hashedRefreshToken];
         await user.save();
 
         res.cookie("accessToken", accessToken, {
@@ -181,9 +182,11 @@ export const logout = async (req, res) => {
     const token = req.cookies.refreshToken;
     try {
     if (token) {
+      const hashedToken = hashToken(token);
+
       await User.updateOne(
-        { refreshTokens: token },
-        { $pull: { refreshTokens: token } }
+        {refreshTokens: hashToken},
+        { $pull: { refreshTokens: hashedToken } }
       );
     }
     res.clearCookie("accessToken", cookieOptions);
@@ -192,5 +195,27 @@ export const logout = async (req, res) => {
     res.json({ message: "Logged out" });   
     } catch (error) {
         res.status(500).json({ message: "Server error" });
+    }
+}
+export const checkAuth = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if(!user){
+            return res.status(401).json({message: "User not found", success:false});
+        }
+        res.status(200).json({
+            success: true,
+            user: {
+                ...user._doc,
+                password: undefined
+
+            }
+        })
+    } catch (error) {
+    console.error("Error in checkAuth:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });       
     }
 }
