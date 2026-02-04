@@ -27,22 +27,20 @@ export const useAuthStore = create((set) => ({
             set({ isLoading:false})
         }
     },
-    verifyOtp: async(email, otp) => {
-        set({ isLoading: true, error: null });
-        try {
-            const res = await api.post("auth/verify", { email, otp });
-             toast.success(res.data.message || "Email verified successfully ✅");
-            return res.data;
-           
-        } catch (error) {
-            const message =
-            error.response?.data?.message || "Invalid or expired OTP";
-
-            set({ error: message });
-            toast.error(message);
-        }
-        finally{
-            set({ isLoading: false });
-        }
+    verifyOtp: async ({ email, otp }) => {
+    set({ isLoading: true, error: null });
+    try {
+        const res = await api.post("auth/verify", { email, otp });
+        toast.success(res.data.message || "Email verified successfully ✅");
+        return res.data;
+    } catch (error) {
+        const message =
+        error.response?.data?.message || "Invalid or expired OTP";
+        set({ error: message });
+        toast.error(message);
+    } finally {
+        set({ isLoading: false });
     }
+    }
+
 }))

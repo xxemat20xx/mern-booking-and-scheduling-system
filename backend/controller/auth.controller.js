@@ -5,7 +5,7 @@ import { sendEmail } from '../utils/email.js'
 import { cookieOptions } from '../utils/cookie.js';
 import { hashToken } from '../utils/hashToken.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
-
+import { otpEmailTemplate } from '../utils/emailTemplate.js';
 
 // generate otp helper
 export const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -28,7 +28,7 @@ export const register = async(req, res) => {
         await sendEmail(
         email,
         "Verify your email",
-        `<h2>Your OTP is: ${otp}</h2>`
+        otpEmailTemplate({name, otp})
         );
 
 
@@ -42,11 +42,14 @@ export const register = async(req, res) => {
 export const verify = async(req, res) => {
     const { email, otp } = req.body;
     try {
+         console.log("VERIFY BODY:", req.body);
+        console.log("EMAIL:", email);
+        console.log("OTP:", otp, typeof otp);
         const user = await User.findOne({ email });
         if(!user) return res.status(400).json({ message: "User not found" });
         if(user.isVerified) return res.status(400).json({ message: "User already verified" });
 
-        if(user.otp !== otp || user.otpExpiry < Date.now()){
+        if (Number(user.otp) !== Number(otp) || user.otpExpiry < Date.now()) {
             return res.status(400).json({ message: "Invalid or expired OTP, please try again." })
         }
 
@@ -57,8 +60,10 @@ export const verify = async(req, res) => {
         //save to db
         await user.save();
         res.status(200).json({ message: "Email verified successfully" })
+
+
     } catch (error) {
-        
+        console.error(error)
     }
 };
 export const resendOtp = async(req, res) => {
