@@ -41,6 +41,52 @@ export const useAuthStore = create((set) => ({
     } finally {
         set({ isLoading: false });
     }
+    },
+    login: async(email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+         const response = await api.post('/auth/login', { email, password });
+         set({ 
+            user: response.data.user,
+            isAuthenticated: true,
+            isLoading: false
+         })
+         toast.success("Login successful.");
+        } catch (err) {
+        set({
+            error: err.response?.data?.message || "Invalid email or password",
+            isLoading: false,
+            isAuthenticated: false
+        });
+        throw err;
+        }
+    },
+    logout: async() => {
+        set({ isLoading: true, error: null });
+        try {
+            await api.post('/auth/logout/');
+            set({ user: null, isAuthenticated: false, isLoading: false });
+        } catch (error) {
+            set({ error: error.response.data.message, isLoading: false });
+        }
+    },
+    checkAuth: async() => {
+        set({ isCheckingAuth: true, error: null });
+        try {
+            const response = await api.get('/auth/check-auth');
+            set({ 
+                user: response.data.user, 
+                isAuthenticated: true, 
+                isCheckingAuth: false 
+            });
+        } catch (error) {
+            set({ 
+                error: null, 
+                isAuthenticated: false, 
+                isCheckingAuth: false 
+            });
+            console.error("checkAuth error:", error); 
+        }
     }
 
 }))

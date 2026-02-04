@@ -2,12 +2,12 @@ import { useState } from "react";
 import VerifyOtp from "./VerifyOtp";
 
 import { Input, Button } from '../components/UI'
-    import { User, Mail, Lock, Loader2 } from 'lucide-react';
-
+import { User, Mail, Lock, Loader2 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 const Register = ({onSuccess, isLoading, register}) => {
   const [data, setData] = useState({ name: '', email: '', password: '' });
-  
+  const navigate = useNavigate();
     
   return (
     <div className="w-full space-y-8">
@@ -21,6 +21,9 @@ const Register = ({onSuccess, isLoading, register}) => {
         <Input label="Password" type="password" placeholder="••••••••" value={data.password} autoComplete="" onChange={(e) => setData({...data, password: e.target.value})} required icon={<Lock size={20} />} />
         <Button isLoading={isLoading} type="submit">Initialize Registration</Button>
       </form>
+      <p className="text-center">Already have an account? <span 
+      className="text-blue-500 hover:border-b border-blue-500 cursor-pointer"
+      onClick={() => navigate("/login")}>Login</span></p>
     </div>
   )
 }

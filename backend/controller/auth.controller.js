@@ -113,6 +113,7 @@ export const login = async(req, res) => {
         user: {
             id: user._id,
             email: user.email,
+            isVerified: user.isVerified,
         },
         });
     } catch (error) {
@@ -203,24 +204,30 @@ export const logout = async (req, res) => {
     }
 }
 export const checkAuth = async (req, res) => {
-    try {
-        const user = await User.findById(req.userId);
-        if(!user){
-            return res.status(401).json({message: "User not found", success:false});
-        }
-        res.status(200).json({
-            success: true,
-            user: {
-                ...user._doc,
-                password: undefined
+  try {
+    const user = await User.findById(req.userId);
 
-            }
-        })
-    } catch (error) {
+    if (!user) {
+      return res.status(401).json({
+        message: "User not found",
+        success: false
+      });
+    }
+
+    const userObj = user.toObject();
+
+    delete userObj.password;
+
+    res.status(200).json({
+      success: true,
+      user: userObj
+    });
+
+  } catch (error) {
     console.error("Error in checkAuth:", error);
     return res.status(500).json({
       success: false,
       message: "Server error"
-    });       
-    }
-}
+    });
+  }
+};
