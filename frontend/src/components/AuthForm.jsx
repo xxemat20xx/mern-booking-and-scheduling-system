@@ -12,7 +12,7 @@ const AuthForm = ({initial = 'login'}) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef([]);
 
-  const { isLoading, login, register, error, verifyOtp } = useAuthStore();
+  const { isLoading, login, register, error, verifyOtp, forgotPassword } = useAuthStore();
     const handleChange = (index, value) => {
       const newOtp = [...otp];
       newOtp[index] = value.slice(-1);
@@ -60,6 +60,15 @@ const AuthForm = ({initial = 'login'}) => {
         clearData();
       }
     };
+    const handleForgotSubmit = async(e) => {
+      e.preventDefault();
+      try {
+        await forgotPassword({ email });
+        clearData();
+      } catch (error) {
+        console.error(error)
+      }
+    }
 
   const renderLogin = () => (
       <div className="animate-fade-in space-y-6">
@@ -125,7 +134,7 @@ const AuthForm = ({initial = 'login'}) => {
                 <Input 
                 label="Name" 
                 type="text" 
-                placeholder="name@example.com" 
+                placeholder="John Doe" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
                 required 
@@ -169,10 +178,10 @@ const AuthForm = ({initial = 'login'}) => {
   const renderForgot = () => (
     <div className="animate-fade-in space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white">Reset Password</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Reset Password</h2>
         <p className="text-slate-400 mt-2">Enter your email and we'll send you a reset link.</p>
       </div>
-      <form onSubmit={handleLoginSubmit} className="space-y-4">
+      <form onSubmit={handleForgotSubmit} className="space-y-4">
                 <Input 
                 label="Email" 
                 type="text" 
@@ -192,7 +201,15 @@ const AuthForm = ({initial = 'login'}) => {
                 >
                 Send Reset Link
                 </Button>
-
+                <div className="flex items-center justify-center mt-6">
+                  <button
+                    onClick={() => setMode('login')}
+                    className="flex items-center text-sm text-slate-900 hover:text-slate-700 font-medium transition-all duration-200 delay-150"
+                  >
+                    Back to Login
+                    <ArrowRight className="ml-1" />
+                  </button>
+                </div>
       </form>
     </div>
   )

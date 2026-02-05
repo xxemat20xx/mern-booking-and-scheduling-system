@@ -1,17 +1,16 @@
 import { useAuthStore } from "./store/useAuthStore"
 import { useEffect } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
+
 import Login from '../src/pages/Login'
 import Dashboard from '../src/pages/Dashboard'
-import VerifyOtp from '../src/pages/VerifyOtp'
-import Register from '../src/pages/Register'
+import ResetPassword from "./pages/ResetPassword";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const { user, isAuthenticated,isCheckingAuth } = useAuthStore();
   if(!user?.isVerified || !isAuthenticated) return <Login />
-  if (user && user.isVerified === false) return <VerifyOtp />;
   if(isCheckingAuth) return <div>Loading...</div>
   return children;
 };
@@ -51,7 +50,9 @@ const App = () => {
           </ProtectedRoute>
          }/>
         <Route path="/login" element={<RedirectAuthenticatedUser><Login /></RedirectAuthenticatedUser>}/>
-         
+        
+        {/* PUBLIC route */}
+        <Route path="/reset/:token" element={<ResetPassword />}/>
       </Routes>
      
     </>

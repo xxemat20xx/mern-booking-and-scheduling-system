@@ -42,6 +42,18 @@ export const useAuthStore = create((set) => ({
         set({ isLoading: false });
     }
     },
+    forgotPassword: async({ email }) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.post('/auth/forgot', { email });
+            set({ user: response.data.user, isLoading: false});
+            toast.success("Link was sent to your email address.")
+        } catch (error) {
+            set({ isLoading: false});
+            toast.error("User not found.")
+            throw error;
+        }
+    },
     login: async(email, password) => {
         set({ isLoading: true, error: null });
         try {

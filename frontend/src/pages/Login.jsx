@@ -9,7 +9,7 @@ const Login = () => {
         </div>
 
       {/* Right Side: Auth Forms (Order 1 on mobile, Order 2 on desktop) */}
-      <div className="order-1 md:order-2 flex-1 md:w-1/2 lg:w-[45%] min-h-screen flex items-center justify-center p-6 md:p-12 lg:p-16 bg-dark-surface relative">
+      <div className="order-1 md:order-2 flex-1 max-w-xl md:w-1/2 lg:w-[45%] min-h-screen flex items-center justify-center p-6 md:p-12 lg:p-16 bg-dark-surface relative shadow-2xl">
           {/* Background texture/glow for the form side */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-[20%] -right-[20%] w-[70%] h-[70%] bg-primary-900/10 rounded-full blur-[100px]"></div>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
+import image1 from '/assets/generated.png'
+import image2 from '/assets/generated1.png'
 const IMAGES = [
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&q=80&w=1200',
-  'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=1200'
+  image1,
+  image2
 ];
 
 const HeroSection = () => {
