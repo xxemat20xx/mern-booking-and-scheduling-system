@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { api } from '../axios/api';
-
 import { toast } from "react-toastify";
 
 export const useAuthStore = create((set) => ({
@@ -21,10 +20,11 @@ export const useAuthStore = create((set) => ({
                 isLoading: false,
                 
             });
-            toast.success("Registration successful, OTP was sent to your registered email")
+            toast.success("Registration successful, OTP was sent to your registered email");
         } catch (error) {
             toast.error(error.response?.data?.message || "Error signing up.")
             set({ isLoading:false})
+            throw error;
         }
     },
     verifyOtp: async ({ email, otp }) => {
@@ -58,6 +58,7 @@ export const useAuthStore = create((set) => ({
             isLoading: false,
             isAuthenticated: false
         });
+         toast.error("Invalid email or password.");
         throw err;
         }
     },

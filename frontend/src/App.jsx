@@ -1,6 +1,6 @@
 import { useAuthStore } from "./store/useAuthStore"
 import { useEffect } from "react";
-
+import { Bounce, ToastContainer } from "react-toastify";
 import Login from '../src/pages/Login'
 import Dashboard from '../src/pages/Dashboard'
 import VerifyOtp from '../src/pages/VerifyOtp'
@@ -22,6 +22,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
   return children;
 };
 const App = () => {
+  
   const { checkAuth, } = useAuthStore();
   useEffect(() => {
     checkAuth();
@@ -29,16 +30,30 @@ const App = () => {
 
   return (
     <>
+    <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick={false}
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+    transition={Bounce}
+    />
+  
       <Routes>
          <Route path="/" element={
           <ProtectedRoute>
               <Dashboard />
           </ProtectedRoute>
          }/>
-
         <Route path="/login" element={<RedirectAuthenticatedUser><Login /></RedirectAuthenticatedUser>}/>
-        <Route path="/register" element={<RedirectAuthenticatedUser><Register /></RedirectAuthenticatedUser>}/>
+         
       </Routes>
+     
     </>
   )
 }

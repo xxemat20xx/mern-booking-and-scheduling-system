@@ -1,5 +1,5 @@
 @import "tailwindcss";
-        body {
+        /* body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
@@ -24,4 +24,4 @@
             background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
+        } */
