@@ -6,6 +6,7 @@ import { connectDB } from './lib/db.js';
 
 // routes
 import authRoutes from './routes/auth.routes.js'
+import bookRoutes from './routes/booking.routes.js'
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes );
+app.use('/api/book', bookRoutes );
 
 app.listen(PORT, () => {
   connectDB();

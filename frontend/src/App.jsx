@@ -5,8 +5,10 @@ import { Bounce, ToastContainer } from "react-toastify";
 import Login from '../src/pages/Login'
 import Dashboard from '../src/pages/Dashboard'
 import ResetPassword from "./pages/ResetPassword";
+import Navbar from "./components/Navbar";
 
 import { Routes, Route, Navigate } from "react-router-dom";
+
 
 const ProtectedRoute = ({ children }) => {
   const { user, isAuthenticated,isCheckingAuth } = useAuthStore();
@@ -46,7 +48,9 @@ const App = () => {
       <Routes>
          <Route path="/" element={
           <ProtectedRoute>
-              <Dashboard />
+            <Navbar>
+                <Dashboard />
+            </Navbar>
           </ProtectedRoute>
          }/>
         <Route path="/login" element={<RedirectAuthenticatedUser><Login /></RedirectAuthenticatedUser>}/>
