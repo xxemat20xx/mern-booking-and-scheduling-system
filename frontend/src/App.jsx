@@ -6,6 +6,7 @@ import Login from '../src/pages/Login'
 import Dashboard from '../src/pages/Dashboard'
 import ResetPassword from "./pages/ResetPassword";
 import Navbar from "./components/Navbar";
+import StaffDashboard from "./pages/StaffDashboard";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -50,6 +51,7 @@ const App = () => {
           <ProtectedRoute>
             <Navbar>
                 <Dashboard />
+                <StaffDashboard />
             </Navbar>
           </ProtectedRoute>
          }/>

@@ -10,7 +10,7 @@ import { otpEmailTemplate } from '../utils/emailTemplate.js';
 // generate otp helper
 export const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 export const register = async(req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
         const existing = await User.findOne({ email });
         if(existing){
@@ -21,7 +21,13 @@ export const register = async(req, res) => {
         const otp = generateOTP();
         const otpExpiry = Date.now() + 10 * 60 * 1000; //10mins
 
-        const newUser = new User({name, email, password, otp, otpExpiry});
+        const newUser = new User({
+            name, 
+            email, 
+            role: role || 'client',
+            password, 
+            otp, 
+            otpExpiry });
         await newUser.save(); // save to DB
 
         //send email verification
@@ -112,7 +118,9 @@ export const login = async(req, res) => {
         res.json({
         user: {
             id: user._id,
+            name: user.name,
             email: user.email,
+            role: user.role,
             isVerified: user.isVerified,
         },
         });

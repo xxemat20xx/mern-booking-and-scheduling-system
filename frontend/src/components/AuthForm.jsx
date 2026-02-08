@@ -1,7 +1,7 @@
 import { useState, useRef } from "react"
 import { useAuthStore } from '../store/useAuthStore'
 import { Input, Button } from './UI';
-import { Mail, Lock, Loader2, ArrowRight, User, Shield } from 'lucide-react';
+import { Mail, Lock, Loader2, ArrowRight, User } from 'lucide-react';
 
 
 const AuthForm = ({initial = 'login'}) => {
@@ -9,6 +9,7 @@ const AuthForm = ({initial = 'login'}) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef([]);
 
@@ -75,6 +76,7 @@ const AuthForm = ({initial = 'login'}) => {
         <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-white">Welcome back</h2>
         <p className="text-slate-400 mt-2">Enter your details to access your workspace.</p>
+        
         </div>
 
         <form onSubmit={handleLoginSubmit} className="space-y-4">

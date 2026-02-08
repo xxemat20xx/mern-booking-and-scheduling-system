@@ -13,7 +13,7 @@ router.use(verifyToken);
 
 router.get("/", getBooks);
 router.post("/bookings", createBooking);
-router.put("/:id", updateBooking);
-router.delete("/:id", deleteBooking);
+router.put("/update/:id", updateBooking);
+router.delete("/delete/:id", deleteBooking);
 
 export default router;
