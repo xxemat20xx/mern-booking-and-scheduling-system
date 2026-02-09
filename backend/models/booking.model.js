@@ -8,6 +8,11 @@ const bookingSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  clientSnapshot: {       
+    id: String,
+    name: String,
+    email: String,
+  },
   serviceId: { type: String, required: true },       // Reference to service
   staffId: { type: String, required: true },         // Reference to staff
   title: { type: String, required: true },           
@@ -15,7 +20,7 @@ const bookingSchema = new mongoose.Schema({
   end: { type: Date, required: true },
   status: {
     type: String,
-    enum: ["pending", "confirmed", "cancelled"],
+    enum: ["pending", "confirmed", "declined"],
     default: "pending",
   },
   notes: { type: String, default: "" },

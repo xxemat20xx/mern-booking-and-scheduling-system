@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { api } from '../axios/api';
 import { toast } from "react-toastify";
+import { useBookStore } from './useBookStore';
 
 export const useAuthStore = create((set) => ({
     user: null,
@@ -79,6 +80,9 @@ export const useAuthStore = create((set) => ({
         try {
             await api.post('/auth/logout/');
             set({ user: null, isAuthenticated: false, isLoading: false });
+            
+            // reset bookings state
+            useBookStore.setState({ bookings: [] });
         } catch (error) {
             set({ error: error.response.data.message, isLoading: false });
         }

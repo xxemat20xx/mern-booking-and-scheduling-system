@@ -1,68 +1,101 @@
-import { useAuthStore } from "./store/useAuthStore"
 import { useEffect } from "react";
-import { Bounce, ToastContainer } from "react-toastify";
-
-import Login from '../src/pages/Login'
-import Dashboard from '../src/pages/Dashboard'
-import ResetPassword from "./pages/ResetPassword";
-import Navbar from "./components/Navbar";
-import StaffDashboard from "./pages/StaffDashboard";
-
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer, Bounce } from "react-toastify";
 
+import { useAuthStore } from "./store/useAuthStore";
+import { useBookStore } from "./store/useBookStore";
+import './store/storeListener';
+
+
+import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
+import StaffDashboard from "./pages/StaffDashboard";
+import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, isAuthenticated,isCheckingAuth } = useAuthStore();
-  if(!user?.isVerified || !isAuthenticated) return <Login />
-  if(isCheckingAuth) return <div>Loading...</div>
+  const { user, isAuthenticated, isCheckingAuth } = useAuthStore();
+
+  // Wait for checkAuth to complete
+  if (isCheckingAuth) return <div>Loading...</div>;
+
+  // Redirect to login if not authenticated or not verified
+  if (!isAuthenticated || !user?.isVerified) return <Navigate to="/login" replace />;
+
   return children;
 };
+
 const RedirectAuthenticatedUser = ({ children }) => {
-  const { isAuthenticated, user, isCheckingAuth} = useAuthStore();
-  if (isAuthenticated && user?.isVerified) return <Navigate to="/" replace />
-  if(isCheckingAuth) return <div>Loading...</div>
+  const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
+
+  if (isCheckingAuth) return <div>Loading...</div>;
+
+  if (isAuthenticated && user?.isVerified) return <Navigate to="/" replace />;
+
   return children;
 };
+
 const App = () => {
-  
-  const { checkAuth, } = useAuthStore();
+  const { checkAuth } = useAuthStore();
+
   useEffect(() => {
     checkAuth();
-  }, [checkAuth])
+  }, [checkAuth]);
+  
+  useEffect(() => {
+  const unsubscribe = useAuthStore.subscribe(
+    (user) => user,
+    (user) => {
+      if (user?.role === 'staff') {
+        useBookStore.getState().fetchStaffBookings();
+      } else {
+        useBookStore.setState({ bookings: [] });
+      }
+    }
+  );
+  return () => unsubscribe();
+}, []);
 
   return (
     <>
-    <ToastContainer
-    position="top-right"
-    autoClose={3000}
-    hideProgressBar={false}
-    newestOnTop={false}
-    closeOnClick={false}
-    rtl={false}
-    pauseOnFocusLoss
-    draggable
-    pauseOnHover
-    theme="light"
-    transition={Bounce}
-    />
-  
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+
       <Routes>
-         <Route path="/" element={
-          <ProtectedRoute>
-            <Navbar>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Navbar>
                 <Dashboard />
                 <StaffDashboard />
-            </Navbar>
-          </ProtectedRoute>
-         }/>
-        <Route path="/login" element={<RedirectAuthenticatedUser><Login /></RedirectAuthenticatedUser>}/>
-        
-        {/* PUBLIC route */}
-        <Route path="/reset/:token" element={<ResetPassword />}/>
+              </Navbar>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <Login />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route path="/reset/:token" element={<ResetPassword />} />
       </Routes>
-     
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -19,17 +19,17 @@ export const createBooking = async (req, res) => {
     notes = "",
   } = req.body;
 
-  // 🔒 Validate required input from frontend
+  // Validate required input
   if (!serviceId || !staffId || !date || !startTime) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
   try {
-    // ✅ Authenticated user
+    // Authenticated user
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ✅ Resolve service & staff from constants
+    // Resolve service & staff
     const service = SERVICES.find(s => s.id === serviceId);
     const staff = STAFF.find(s => s.id === staffId);
 
@@ -37,12 +37,12 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ message: "Invalid service or staff" });
     }
 
-    // 🕒 Build real Date objects
+    // Build Date objects
     const start = new Date(`${date}T${startTime}:00`);
     const end = new Date(start);
     end.setMinutes(end.getMinutes() + service.duration);
 
-    // ⚠️ Conflict check (same staff, overlapping time)
+    // Conflict check
     const conflict = await Booking.findOne({
       staffId,
       start: { $lt: end },
@@ -54,9 +54,14 @@ export const createBooking = async (req, res) => {
       return res.status(409).json({ message: "Time slot already booked" });
     }
 
-    // 📝 Create booking (schema-aligned)
+    // Create booking
     const booking = await Booking.create({
       userId: user._id,
+      clientSnapshot: {               // <<< ADD THIS
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
       serviceId,
       staffId,
       title: service.name,
@@ -79,7 +84,7 @@ export const createBooking = async (req, res) => {
       },
     });
 
-    // 📧 Email confirmation
+    // Email confirmation
     try {
       await sendEmail(
         user.email,
@@ -102,7 +107,6 @@ export const createBooking = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const updateBooking = async(req,res) => {
   try {
@@ -131,3 +135,55 @@ export const deleteBooking = async(req,res) => {
     res.status(500).json({ message: error.message });
   }
 };
+export const confirmBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+    if (booking.status !== "pending") {
+      return res.status(400).json({ message: "Booking cannot be confirmed" });
+    }
+
+    booking.status = "confirmed";
+    await booking.save();
+
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+export const cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // if (booking.userId.toString() !== req.userId.toString()) {
+    //   return res.status(403).json({ message: "Not authorized" });
+    // }
+
+    if (booking.status === "declined") {
+      return res.status(400).json({ message: "Booking already cancelled" });
+    }
+
+    booking.status = "declined";
+    await booking.save();
+
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// Get all bookings (no filter)
+export const getAllBookingsForStaff = async (req, res) => {
+  try {
+    const bookings = await Booking.find().sort({ start: 1 }); // all bookings
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
