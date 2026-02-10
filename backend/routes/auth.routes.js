@@ -18,7 +18,7 @@ router.post('/verify', verify);
 router.post('/resend', resendOtp);
 router.post('/login', login);
 router.post('/forgot', forgotPassword);
-router.post('/reset/:token', resetPassword);
+router.put('/reset/:token', resetPassword);
 router.post('/logout', logout);
 
 // protected

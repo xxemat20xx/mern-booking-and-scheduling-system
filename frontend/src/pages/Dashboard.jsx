@@ -30,12 +30,12 @@ const StatusBadge = ({status}) => {
 
 const Dashboard = () => {
   const { user } = useAuthStore();
-  const { fetchBookings, bookings, createBooking } = useBookStore();
+  const { fetchBookings, bookings, createBooking, isLoading } = useBookStore();
 
   useEffect(() => {
     fetchBookings();
   },[fetchBookings])
-
+  console.log(bookings)
 
   const [view, setView] = useState('book');
   const [step, setStep] = useState(1);
@@ -88,6 +88,9 @@ const Dashboard = () => {
     } catch (err) {
       console.error(err);
     }
+    finally{
+      setIsSubmitting(false);
+    }
   };
   const isSlotBooked = () => {} // helper to show if book is not avail
   
@@ -98,13 +101,13 @@ return (
         <div className="bg-white border border-slate-200 p-1 rounded-xl shadow-sm flex mb-4">
           <button 
             onClick={() => setView('book')}
-            className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'book' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
+            className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'book' ? 'bg-green-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
           >
             <CalendarIcon size={16} /> Book New
           </button>
           <button 
             onClick={() => setView('history')}
-            className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'history' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
+            className={`px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${view === 'history' ? 'bg-green-500 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}`}
           >
             <History size={16} /> My Schedule
           </button>     
@@ -118,11 +121,11 @@ return (
               {steps.map((s) => (
                 <div key={s.id} className="flex flex-col items-center gap-2">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
-                    step >= s.id ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-200 text-slate-400'
+                    step >= s.id ? 'bg-green-600 border-green-600 text-white' : 'bg-white border-slate-200 text-slate-400'
                   }`}>
                     {step > s.id ? <Check size={20} /> : s.icon ? <s.icon size={20} /> : null}
                   </div>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${step >= s.id ? 'text-indigo-600' : 'text-slate-400'}`}>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${step >= s.id ? 'text-green-600' : 'text-slate-400'}`}>
                     {s.label}
                   </span>
                 </div>
@@ -139,15 +142,15 @@ return (
                     <button
                       key={service.id}
                       onClick={() => { setSelectedService(service); setStep(2); }}
-                      className="flex flex-col p-6 rounded-xl border-2 border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                      className="flex flex-col p-6 rounded-xl border-2 border-slate-100 hover:border-green-600 hover:bg-green-50/30 transition-all text-left group"
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <span className="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold uppercase text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-600">
+                        <span className="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold uppercase text-slate-500 group-hover:bg-green-100 group-hover:text-green-600">
                           {service.category}
                         </span>
                         <span className="font-bold text-lg">${service.price}</span>
                       </div>
-                      <h3 className="font-bold text-slate-900 group-hover:text-indigo-600">{service.name}</h3>
+                      <h3 className="font-bold text-slate-900 group-hover:text-green-600">{service.name}</h3>
                       <p className="text-sm text-slate-500 mt-1">{service.description}</p>
                       <div className="mt-4 flex items-center gap-2 text-xs text-slate-400 font-medium">
                         <Clock size={14} /> {service.duration} mins
@@ -166,15 +169,15 @@ return (
                     <button
                       key={staff.id}
                       onClick={() => { setSelectedStaff(staff); setStep(3); }}
-                      className="p-6 rounded-xl border-2 border-slate-100 hover:border-indigo-600 transition-all text-center group"
+                      className="p-6 rounded-xl border-2 border-slate-100 hover:border-green-600 transition-all text-center group"
                     >
-                      <img src={staff.avatar} alt={staff.name} className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-slate-50 group-hover:border-indigo-200" />
-                      <h3 className="font-bold text-slate-900 group-hover:text-indigo-600">{staff.name}</h3>
+                      <img src={staff.avatar} alt={staff.name} className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-slate-50 group-hover:border-green-200" />
+                      <h3 className="font-bold text-slate-900 group-hover:text-green-600">{staff.name}</h3>
                       <p className="text-sm text-slate-500">{staff.role}</p>
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setStep(1)} className="mt-8 text-slate-400 hover:text-indigo-600 text-sm font-medium">← Back to services</button>
+                <button onClick={() => setStep(1)} className="mt-8 text-slate-400 hover:text-green-600 text-sm font-medium">← Back to services</button>
               </div>
             )}
             {/* --------------CHOOSE DATE AND TIME STEP 3-------------- */}
@@ -186,7 +189,7 @@ return (
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Select Date</label>
                     <input 
                       type="date" 
-                      className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
                       min={new Date().toISOString().split('T')[0]}
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
@@ -201,14 +204,14 @@ return (
                           return (
                             <button
                               key={time}
-                              disabled={booked}
+                              disabled={isLoading || booked}
                               onClick={() => setSelectedTime(time)}
                               className={`p-2.5 rounded-lg text-sm font-semibold border transition-all ${
                                 booked 
                                   ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed'
                                   : selectedTime === time 
-                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100'
-                                    : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-600'
+                                    ? 'bg-green-600 text-white border-green-600 shadow-lg shadow-green-100'
+                                    : 'bg-white text-slate-600 border-slate-200 hover:border-green-600'
                               }`}
                             >
                               {time}
@@ -217,11 +220,11 @@ return (
                         })}
                       </div>
                       <div className="mt-8 flex justify-between items-center">
-                          <button onClick={() => setStep(2)} className="text-slate-400 hover:text-indigo-600 text-sm font-medium">← Back to specialists</button>
+                          <button onClick={() => setStep(2)} className="text-slate-400 hover:text-green-600 text-sm font-medium">← Back to specialists</button>
                           <button 
                             disabled={!selectedDate || !selectedTime}
                             onClick={() => setStep(4)}
-                            className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2"
+                            className="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
                           >
                             Continue <ChevronRight size={18} />
                           </button>                     
@@ -258,22 +261,22 @@ return (
                         </div>
                         <div className="pt-4 mt-2 border-t border-slate-200 flex justify-between items-center">
                           <span className="font-bold text-slate-900">Total</span>
-                          <span className="text-2xl font-black text-indigo-600">${selectedService?.price}</span>
+                          <span className="text-2xl font-black text-green-600">${selectedService?.price}</span>
                         </div>                 
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-6">
-                      <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-                        <h4 className="text-xs font-bold uppercase text-indigo-600 mb-1">Authenticated As</h4>
+                      <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                        <h4 className="text-xs font-bold uppercase text-green-600 mb-1">Authenticated As</h4>
                         <p className="font-bold text-slate-900">{user.name}</p>
                         <p className="text-xs text-slate-500">{user.email}</p>
                       </div>
                       <div>
                           <label className="block text-sm font-semibold text-slate-700 mb-1">Additional Notes</label>
                           <textarea 
-                            className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-32 resize-none transition-all" 
+                            className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-green-500 h-32 resize-none transition-all" 
                             placeholder="Any medical conditions or special preferences we should know about?"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
@@ -282,11 +285,11 @@ return (
                     </div>
                 </div>
                 <div className="mt-8 flex justify-between items-center">
-                    <button onClick={() => setStep(3)} className="text-slate-400 hover:text-indigo-600 text-sm font-medium">← Back</button>
+                    <button onClick={() => setStep(3)} className="text-slate-400 hover:text-green-600 text-sm font-medium">← Back</button>
                     <button 
                       disabled={isSubmitting}
                       onClick={handleComplete}
-                      className="bg-indigo-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-indigo-700 disabled:opacity-50 shadow-xl shadow-indigo-100 transition-all flex items-center gap-3"
+                      className="bg-green-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 disabled:opacity-50 shadow-xl shadow-green-100 transition-all flex items-center gap-3"
                     >
                         {isSubmitting ? 'Requesting...' : 'Confirm Request'} <Sparkles size={18} />
                     </button>
@@ -308,7 +311,7 @@ return (
                 return (
                   <div key={booking._id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                      <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
                         <CalendarIcon size={24} />
                       </div>
                       <div>

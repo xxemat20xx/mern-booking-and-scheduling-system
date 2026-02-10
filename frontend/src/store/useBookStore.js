@@ -34,13 +34,14 @@ export const useBookStore = create((set) => ({
         set({ error:null, isLoading: true});
         try {
             const res = await api.post('/book/bookings', bookingData);
-            set((state) => ({ bookings: [...state.bookings, res.data], isLoading: false }));
+            set((state) => ({ bookings: [...state.bookings, res.data], isLoading: false, error: null }));
             toast.success('Booking request sent successfully!');
             return res.data;
         } catch (error) {
             toast.error(error.response?.data?.message || error.message);
             set({ isLoading: false });
             throw error;
+      
         }
     },
     confirmBooking: async (id) => {

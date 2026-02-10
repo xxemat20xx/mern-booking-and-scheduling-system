@@ -104,6 +104,21 @@ export const useAuthStore = create((set) => ({
             });
             console.error("checkAuth error:", error); 
         }
+    },
+    resetPassword: async (token, newPassword) => {
+        set({ isLoading: true, error: null});
+        try {
+            const res = await api.put(`/auth/reset/${token}`, {newPassword});
+            toast.success("Password updated.");
+            set({ isLoading: false, message: res.data.message })
+        } catch (error) {
+      set({ 
+        isLoading: false, 
+        error: error.response?.data?.message || 'Something went wrong' 
+      });
+      toast.error("Something went wrong.")
+      throw new Error(error)
+    }
     }
 
 }))

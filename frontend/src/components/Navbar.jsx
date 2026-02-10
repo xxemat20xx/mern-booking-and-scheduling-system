@@ -33,11 +33,11 @@ const Navbar = ({ children }) => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-2">
-              B
+            <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-2">
+              BA
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
-              Booking<span className="text-indigo-600">App</span>
+              Booking<span className="text-green-500">App</span>
             </span>
           </div>
 
@@ -46,14 +46,14 @@ const Navbar = ({ children }) => {
             <div className="flex items-center space-x-8">
             <div className="hidden md:flex flex-col items-end">
               <span className="text-sm font-bold text-slate-900">{user?.name.charAt(0).toUpperCase() + user?.name.slice(1)}</span>
-              <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest flex items-center gap-1">
+              <span className="text-[10px] font-bold text-green-800 uppercase tracking-widest flex items-center gap-1">
                 {user?.role === 'staff' ? <Shield size={10} /> : <UserIcon size={10} />}
                 {user?.role || 'Client'}
               </span>
             </div>
               <button 
               onClick={() => handleLogout()}
-              className='text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors duration-200'>
+              className='text-sm font-medium text-slate-600 hover:text-green-700 transition-colors duration-200'>
                  <div className='flex items-center justify-center gap-3'><span>Logout</span><LogOut size={18} /> </div>
               </button>
             </div>

@@ -2,6 +2,8 @@ import Booking from '../models/booking.model.js';
 import User from '../models/user.model.js';
 import { sendEmail } from '../utils/email.js';
 import { SERVICES, STAFF } from "../constants.js";
+import { bookingPendingEmailTemplate, confirmedBookingTemplate } from '../utils/emailTemplate.js'
+
 export const getBooks = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.userId }).sort({ start: 1 });
@@ -68,7 +70,12 @@ export const createBooking = async (req, res) => {
       start,
       end,
       notes,
-
+      notifications: [
+        {
+          type: "created",
+          message: `New booking request from ${user.name}`,
+        },
+      ],
       serviceSnapshot: {
         id: service.id,
         name: service.name,
@@ -83,18 +90,15 @@ export const createBooking = async (req, res) => {
         role: staff.role,
       },
     });
-
+    
     // Email confirmation
+    const serviceName = service.name;
+    const staffName = staff.name;
     try {
       await sendEmail(
         user.email,
         "Booking Pending",
-        `
-          <h2>Booking Pending</h2>
-          <p><strong>${service.name}</strong></p>
-          <p>With ${staff.name}</p>
-          <p>${start.toLocaleString()} – ${end.toLocaleString()}</p>
-        `
+        bookingPendingEmailTemplate({serviceName, staffName, start, end})
       );
     } catch (err) {
       console.error("Email failed, booking still created");
@@ -103,7 +107,7 @@ export const createBooking = async (req, res) => {
     res.status(201).json(booking);
 
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ message: error.message });
   }
 };
@@ -144,11 +148,54 @@ export const confirmBooking = async (req, res) => {
     if (booking.status !== "pending") {
       return res.status(400).json({ message: "Booking cannot be confirmed" });
     }
-
+    
     booking.status = "confirmed";
+
+    // ✅ Add notification
+    booking.notifications.push({
+      type: "confirmed",
+      message: `Booking confirmed for ${booking.serviceSnapshot?.name}`,
+    });
+
+
     await booking.save();
 
+    // Get user from snapshot (recommended)
+    const userEmail =
+      booking.clientSnapshot?.email ||
+      (await User.findById(booking.userId))?.email;
+
+    const userName = booking.clientSnapshot?.name;
+
+    const serviceName = booking.serviceSnapshot?.name;
+    const staffName = booking.staffSnapshot?.name;
+
+    const start = booking.start;
+    const end = booking.end;
+
+    if(userEmail){
+      try {
+        await sendEmail(
+          userEmail,
+          "✅ Booking Confirmed",
+         confirmedBookingTemplate({
+          name: userName,
+          serviceName,
+          staffName,
+          start: start.toLocaleString(),
+          end: end.toLocaleString(),
+        })
+
+        )
+      } catch (error) {
+          console.error("Email failed:", error);
+      }
+    }
+  
+
     res.status(200).json(booking);
+ 
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -169,6 +216,12 @@ export const cancelBooking = async (req, res) => {
     }
 
     booking.status = "declined";
+    // ✅ Add notification
+    booking.notifications.push({
+      type: "declined",
+      message: `Booking confirmed for ${booking.serviceSnapshot?.name}`,
+    });
+
     await booking.save();
 
     res.status(200).json(booking);

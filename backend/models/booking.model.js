@@ -38,6 +38,18 @@ const bookingSchema = new mongoose.Schema({
     name: String,
     role: String,
   },
+  notifications: [
+    {
+      type: {
+        type: String,
+        enum: ["created", "confirmed", "declined"],
+        required: true
+      },
+      message: { type: String, required: true },
+      isRead: { type: Boolean, default: false },
+      createdAt: { type: Date, default: Date.now },
+    }
+  ]
 }, {
   timestamps: true,
   toJSON: {

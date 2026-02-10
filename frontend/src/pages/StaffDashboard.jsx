@@ -1,4 +1,4 @@
-import React, { useState, useEffect, act } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SERVICES, STAFF, TIME_SLOTS } from "../constants/data";
 import { Trash2, CheckCircle, Mail, AlertCircle, TrendingUp, Users, Calendar as CalendarIcon, XCircle, Clock } from 'lucide-react';
 import FullCalendar from '@fullcalendar/react';
@@ -73,7 +73,6 @@ const StaffDashboard = () => {
       };
     });
 
-  console.log(calendarEvents)
   const handleAction = async(bookingId, action) => {
     if(action === 'confirmed') {
       await confirmBooking(bookingId);
@@ -83,7 +82,20 @@ const StaffDashboard = () => {
     }
      fetchStaffBookings(); 
   };
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    
+  };
+
+  
+  const notifications = bookings
+    .flatMap(b =>
+      (b.notifications || []).map(n => ({
+        ...n,
+        bookingId: b._id,
+      }))
+    )
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
 return (
   <div className="space-y-8 animate-in fade-in duration-500">
     {user.role?.toLowerCase() === 'staff' && (
@@ -100,7 +112,7 @@ return (
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all ${
                 activeTab === tab
-                  ? 'bg-indigo-600 text-white shadow-md'
+                  ? 'bg-green-600 text-white shadow-md'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -186,7 +198,7 @@ return (
                         {booking.status === 'approved' && (
                            <button 
                               onClick={() => handleAction(booking, 'completed')}
-                              className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-bold border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2"
+                              className="px-4 py-2 bg-green-50 text-green-600 rounded-lg text-sm font-bold border border-green-100 hover:bg-green-600 hover:text-white transition-all flex items-center gap-2"
                             >
                               <CheckCircle size={16} /> Complete
                             </button>
@@ -225,6 +237,43 @@ return (
           />
       </div>
     )}
+{activeTab === 'notifications' && (
+  <div className="bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <div className="p-6 border-b border-slate-100">
+      <h3 className="font-bold text-lg">Notifications</h3>
+    </div>
+
+    {notifications.length === 0 ? (
+      <div className="p-12 text-center text-slate-400">
+        <Mail size={40} className="mx-auto mb-3 opacity-20" />
+        No notifications yet
+      </div>
+    ) : (
+      <div className="divide-y divide-slate-100">
+        {notifications.map((n, idx) => (
+          <div
+            key={idx}
+            className={`p-4 flex gap-3 ${
+              !n.isRead ? 'bg-green-50' : ''
+            }`}
+          >
+            <AlertCircle className="text-green-600 mt-1" size={18} />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-slate-900">
+                {n.message}
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
+                {new Date(n.createdAt).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
+
      </>
     )}
   </div>

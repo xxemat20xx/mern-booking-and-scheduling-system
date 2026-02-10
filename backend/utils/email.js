@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendEmail = async (to, subject, html) => {
   try {
     const result = await resend.emails.send({
-      from: "Verification Code <onboarding@resend.dev>",
+      from: `BookApp <onboarding@resend.dev>`,
       to,
       subject,
       html,
