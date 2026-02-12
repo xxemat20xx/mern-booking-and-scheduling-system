@@ -1,7 +1,8 @@
 # Book App Project
+<pre><
 🔗 **Live Demo:** [https://mern-booking-and-scheduling-system.onrender.com/login/)
 A booking application built with the **MERN stack** that allows clients to book services and staff to manage and approve bookings. The app includes OTP email verification using **Resend**, booking notifications, and a calendar-based booking view.
-
+/pre>
 ---
 
 ## Features
