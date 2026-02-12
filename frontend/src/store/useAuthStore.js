@@ -66,12 +66,14 @@ export const useAuthStore = create((set) => ({
          })
          toast.success("Login successful.");
         } catch (err) {
+        const errorMessage = err.response?.data?.message || "Invalid email or password";
         set({
-            error: err.response?.data?.message || "Invalid email or password",
+            error: errorMessage,
             isLoading: false,
             isAuthenticated: false
         });
-         toast.error("Invalid email or password.");
+        toast.error(errorMessage);
+
         throw err;
         }
     },

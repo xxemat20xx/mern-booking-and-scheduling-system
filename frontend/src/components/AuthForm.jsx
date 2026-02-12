@@ -1,7 +1,7 @@
 import { useState, useRef } from "react"
 import { useAuthStore } from '../store/useAuthStore'
 import { Input, Button } from './UI';
-import { Mail, Lock, Loader2, ArrowRight, User } from 'lucide-react';
+import { Mail, Lock, Loader2, ArrowRight, User, Users, LayoutDashboard } from 'lucide-react';
 
 
 const AuthForm = ({initial = 'login'}) => {
@@ -74,8 +74,39 @@ const AuthForm = ({initial = 'login'}) => {
   const renderLogin = () => (
       <div className="animate-fade-in space-y-6">
         <div className="text-center mb-8">
+          <h2 className="text-lg font-bold text-slate-700 text-center mb-6">Demo Account</h2>
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => {
+                setEmail('client@example.com')
+                setPassword('123456')
+              }}
+              className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
+            >
+              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                <Users size={22} />
+              </div>
+              <div className="text-left">
+                <h3 className="font-bold text-slate-900">Client</h3>
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setEmail('staff@example.com')
+                setPassword('123456')
+              }}
+              className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
+            >
+              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                <LayoutDashboard size={22} />
+              </div>
+              <div className="text-left">
+                <h3 className="font-bold text-slate-900">Staff</h3>
+              </div>
+            </button>
+          </div>
         <h2 className="text-2xl font-bold text-white">Welcome back</h2>
-        <p className="text-slate-400 mt-2">Enter your details to access your workspace.</p>
+        <p className="text-slate-400 mt-2 text-left">This app uses Resend’s free developer tier, so only my registered email can receive messages.</p>
         
         </div>
 
@@ -224,11 +255,11 @@ const AuthForm = ({initial = 'login'}) => {
       <form onSubmit={handleOtpVerifySubmit} className="space-y-8">
         <div className="flex justify-between gap-2 my-4">
           {otp.map((digit, i) => (
-            <input key={i} ref={el => { inputRefs.current[i] = el; }} type="text" inputMode="numeric" value={digit} onChange={e => handleChange(i, e.target.value)} onKeyDown={e => e.key === 'Backspace' && !otp[i] && inputRefs.current[i - 1]?.focus()} className="border w-12 h-16 glass rounded-xl text-center text-2xl font-bold text-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 my-4" />
+            <input key={i} ref={el => { inputRefs.current[i] = el; }} type="text" inputMode="numeric" value={digit} onChange={e => handleChange(i, e.target.value)} onKeyDown={e => e.key === 'Backspace' && !otp[i] && inputRefs.current[i - 1]?.focus()} className="border w-12 h-16 glass rounded-xl text-center text-2xl font-bold text-green-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 my-4" />
           ))}
         </div>
         {error && <p className="text-center text-rose-400 text-sm animate-pulse">{error}</p>}
-        <button disabled={isLoading} className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold transition-all disabled:opacity-70 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
+        <button disabled={isLoading} className="w-full py-4 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-bold transition-all disabled:opacity-70 shadow-lg shadow-green-500/20 flex items-center justify-center">
           {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Confirm Identity'}
         </button>
       </form>

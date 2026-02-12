@@ -26,7 +26,11 @@ const StatusBadge = ({status}) => {
 
 const StaffDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const { fetchStaffBookings, bookings, confirmBooking, cancelBooking } = useBookStore();
+  const bookings = useBookStore(state => state.bookings);
+  const fetchStaffBookings = useBookStore(state => state.fetchStaffBookings);
+  const confirmBooking = useBookStore(state => state.confirmBooking);
+  const cancelBooking = useBookStore(state => state.cancelBooking);
+
   const { user, isCheckingAuth  } = useAuthStore();
 
     useEffect(() => {
@@ -74,14 +78,15 @@ const StaffDashboard = () => {
     });
 
   const handleAction = async(bookingId, action) => {
-    if(action === 'confirmed') {
-      await confirmBooking(bookingId);
+  if(action === 'confirmed') {
+    await confirmBooking(bookingId);
     }
     if(action === 'declined'){
-      await cancelBooking(bookingId)
+      await cancelBooking(bookingId);
     }
-     fetchStaffBookings(); 
+    await fetchStaffBookings(); 
   };
+
   const handleDelete = () => {
     
   };

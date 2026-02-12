@@ -75,7 +75,7 @@ const HeroSection = () => {
         <div className="max-w-3xl space-y-8">
           <div className="space-y-4">
 
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white transition-all duration-700">
+            <h1 className="text-3xl md:text-6xl font-black tracking-tighter text-white transition-all duration-700">
               {SLIDES[currentIndex].title.split(" ").map((word, i) => (
                 <span
                   key={i}
@@ -155,12 +155,7 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-        <div className="w-5 h-8 border-2 border-white rounded-full flex justify-center p-1">
-          <div className="w-1 h-1.5 bg-white rounded-full animate-bounce" />
-        </div>
-      </div>
+
     </section>
   );
 };

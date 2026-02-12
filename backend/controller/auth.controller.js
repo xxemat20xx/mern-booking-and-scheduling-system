@@ -99,6 +99,11 @@ export const login = async(req, res) => {
         if(!user || !(await user.matchPassword(password))) 
             return res.status(400).json({ message: "Invalid Credentials..." });
 
+        // Check if the user is verified
+        if (!user.isVerified) {
+            return res.status(403).json({ message: "Account not verified. Please verify your email." });
+        }
+
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
         const hashedRefreshToken = hashToken(refreshToken);

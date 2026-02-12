@@ -4,9 +4,9 @@ import { useBookStore } from './useBookStore';
 
 useAuthStore.subscribe(
   (state) => state.user,
-  (user) => {
+  async (user) => {   
     if (user?.role === 'staff') {
-      useBookStore.getState().fetchStaffBookings();
+      await useBookStore.getState().fetchStaffBookings();
     } else {
       useBookStore.setState({ bookings: [] });
     }
