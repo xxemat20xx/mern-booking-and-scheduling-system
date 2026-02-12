@@ -33,9 +33,10 @@ const Dashboard = () => {
   const { fetchBookings, bookings, createBooking, isLoading } = useBookStore();
 
   useEffect(() => {
-    fetchBookings();
+    if(user.role === 'client'){
+      fetchBookings()
+    }
   },[fetchBookings])
-  console.log(bookings)
 
   const [view, setView] = useState('book');
   const [step, setStep] = useState(1);

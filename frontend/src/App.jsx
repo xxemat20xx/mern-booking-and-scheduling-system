@@ -3,8 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer, Bounce } from "react-toastify";
 
 import { useAuthStore } from "./store/useAuthStore";
-import { useBookStore } from "./store/useBookStore";
-import './store/storeListener';
+
 
 
 import Navbar from "./components/Navbar";
@@ -42,19 +41,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
   
-  useEffect(() => {
-  const unsubscribe = useAuthStore.subscribe(
-    (user) => user,
-    (user) => {
-      if (user?.role === 'staff') {
-        useBookStore.getState().fetchStaffBookings();
-      } else {
-        useBookStore.setState({ bookings: [] });
-      }
-    }
-  );
-  return () => unsubscribe();
-}, []);
+
 
   return (
     <>

@@ -66,14 +66,12 @@ export const useAuthStore = create((set) => ({
          })
          toast.success("Login successful.");
         } catch (err) {
-        const errorMessage = err.response?.data?.message || "Invalid email or password";
         set({
-            error: errorMessage,
+            error: err.response?.data?.message || "Invalid email or password",
             isLoading: false,
             isAuthenticated: false
         });
-        toast.error(errorMessage);
-
+         toast.error("Invalid email or password.");
         throw err;
         }
     },
@@ -118,7 +116,7 @@ export const useAuthStore = create((set) => ({
         isLoading: false, 
         error: error.response?.data?.message || 'Something went wrong' 
       });
-      toast.error(error.response?.data.message)
+      toast.error("Something went wrong.")
       throw new Error(error)
     }
     }
