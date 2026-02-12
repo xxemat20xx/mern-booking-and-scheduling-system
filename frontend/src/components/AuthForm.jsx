@@ -75,13 +75,13 @@ const AuthForm = ({initial = 'login'}) => {
       <div className="animate-fade-in space-y-6">
         <div className="text-center mb-8">
           <h2 className="text-lg font-bold text-slate-700 text-center mb-6">Demo Account</h2>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-4">
             <button
               onClick={() => {
                 setEmail('client@example.com')
                 setPassword('123456')
               }}
-              className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
+              className="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
             >
               <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <Users size={22} />
@@ -95,7 +95,7 @@ const AuthForm = ({initial = 'login'}) => {
                 setEmail('staff@example.com')
                 setPassword('123456')
               }}
-              className="w-full p-6 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
+              className="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl flex items-center gap-4 hover:border-green-600 hover:shadow-xl hover:shadow-green-50 transition-all group"
             >
               <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
                 <LayoutDashboard size={22} />
