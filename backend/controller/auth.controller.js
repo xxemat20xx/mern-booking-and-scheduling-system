@@ -6,6 +6,7 @@ import { cookieOptions } from '../utils/cookie.js';
 import { hashToken } from '../utils/hashToken.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 import { otpEmailTemplate } from '../utils/emailTemplate.js';
+import { error } from 'console';
 
 // generate otp helper
 export const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -175,7 +176,8 @@ export const resetPassword = async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: "Invalid or expired token" });
         }
-
+    
+        
         user.password = req.body.newPassword; 
         user.passwordResetToken = undefined;
         user.passwordResetTokenExpiry = undefined;
@@ -187,7 +189,7 @@ export const resetPassword = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal server error",
+            message: error.message,
             error: error.message
         });
     }

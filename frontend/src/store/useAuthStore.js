@@ -116,7 +116,7 @@ export const useAuthStore = create((set) => ({
         isLoading: false, 
         error: error.response?.data?.message || 'Something went wrong' 
       });
-      toast.error("Something went wrong.")
+      toast.error(error.response?.data.message)
       throw new Error(error)
     }
     }
